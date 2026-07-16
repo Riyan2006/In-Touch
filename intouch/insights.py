@@ -12,7 +12,7 @@ import re
 from statistics import fmean
 from typing import Any
 
-from .detection import REFERENCE_LEVELS, detect_dataset
+from .detection import detect_dataset
 from .generator import generate_dataset
 
 
@@ -61,17 +61,30 @@ def _row_for_month(contact: dict[str, Any], month: int) -> dict[str, Any]:
         raise ValueError(f"No signal row exists for month {month}.") from error
 
 
-def _change_percentages(contact: dict[str, Any], month_fired: int) -> dict[str, int]:
+def _raw_change_percentages(contact: dict[str, Any], month_fired: int) -> dict[str, int]:
     current = _row_for_month(contact, month_fired)
     if contact["archetype"] == "cold_start_new":
-        baselines = {"meetups": 2.0, "calls": 4.0, "texts": 20.0}
+        starting = _row_for_month(contact, contact["first_appearance_month"])
+        # A cold start is measured from this relationship's own first observed
+        # month, not against an established friendship's reference frequency.
+        baselines = {
+            signal: max(starting[ROW_FIELDS[signal]], 0.1)
+            for signal in SIGNALS
+        }
     else:
         initial = contact["monthly_signals"][:4]
         baselines = {signal: fmean(row[ROW_FIELDS[signal]] for row in initial) for signal in SIGNALS}
-    return {
+    raw_changes = {
         signal: round((current[ROW_FIELDS[signal]] - baseline) / baseline * 100)
         for signal, baseline in baselines.items()
     }
+    return raw_changes
+
+
+def _change_percentages(contact: dict[str, Any], month_fired: int) -> dict[str, int]:
+    """Return bounded percentages safe to hand to the LLM or fallback."""
+    raw_changes = _raw_change_percentages(contact, month_fired)
+    return {signal: max(-300, min(change, 300)) for signal, change in raw_changes.items()}
 
 
 def _change_start_month(detection_result: dict[str, Any], contact: dict[str, Any]) -> int:
@@ -94,7 +107,10 @@ def build_insight_input(contact: dict[str, Any], detection_result: dict[str, Any
         return None
     month_fired = flag["month_fired"]
     changes = _change_percentages(contact, month_fired)
-    ranked = sorted(SIGNALS, key=lambda signal: (-abs(changes[signal]), SIGNALS.index(signal)))
+    raw_changes = _raw_change_percentages(contact, month_fired)
+    # Rank on the uncapped change so extreme cold-start growth does not turn
+    # into a three-way +300% tie. Only bounded values enter the LLM contract.
+    ranked = sorted(SIGNALS, key=lambda signal: (-abs(raw_changes[signal]), SIGNALS.index(signal)))
     trigger = flag["trigger_signal"]
     # Cold-start has a composite detector trigger, so expose the largest actual
     # human signal change rather than an internal frequency-calculation label.
