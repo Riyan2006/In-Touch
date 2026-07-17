@@ -1,0 +1,4 @@
+019f662f-16f1-72c2-b31e-9ff5785b292c
+
+Verified original Jul 15 In Touch /feedback session identifier for the submission form.
+Directly verified from this project's Codex local session-history record, which names this workspace and stores this exact session ID. The installed `codex resume` executable was blocked by Windows, so this note does not claim a resume command was used.
