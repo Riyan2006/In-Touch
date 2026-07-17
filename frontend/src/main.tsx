@@ -6,4 +6,5 @@ import "./styles.css";
 import "./overrides.css";
 import "./desktop-shell.css";
 
-createRoot(document.getElementById("root")!).render(<StrictMode><App /><MarginWhispers /></StrictMode>);
+const androidBuild = import.meta.env.MODE === "android";
+createRoot(document.getElementById("root")!).render(<StrictMode><App />{!androidBuild && <MarginWhispers />}</StrictMode>);
