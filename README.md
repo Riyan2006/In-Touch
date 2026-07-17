@@ -38,6 +38,12 @@ On macOS/Linux, activate the virtual environment with `source .venv/bin/activate
 
 `python -m intouch.validate` prints the six-contact detector summary. `python -m unittest discover -s tests` runs the full Python test suite.
 
+## Android APK (Android only)
+
+The live web page includes a **Try the web demo** control and an explicitly marked **Android only — APK download** control. The Android package is a Capacitor wrapper around the same React interface, but it intentionally contains only one fictional **Sample Contact** rather than the browser demo's six contacts. It runs from bundled assets and needs no backend, Gemini key, account, or device permissions.
+
+To create and sign the APK, install JDK 21 and Android Studio/SDK, then follow [frontend/ANDROID.md](frontend/ANDROID.md). Publish the resulting `InTouch-android.apk` as the GitHub Release asset named by that document; the web download control targets the repository's stable `latest/download` release URL.
+
 ## Demo data and optional Gemini export
 
 [`frontend/src/data/demo-data.json`](frontend/src/data/demo-data.json) is already included. It is pre-generated, seeded synthetic data for six illustrative contacts, including their monthly signals, detection output, and insight text. Judges can run and view the app without a Gemini key, any API account, or a backend server.
@@ -79,6 +85,9 @@ tests/
 frontend/
   src/                  React + TypeScript + Framer Motion phone demo
   src/data/demo-data.json  Committed static payload consumed by the UI
+  src/data/sample-data.ts  Android-only one-contact illustrative payload
+  android/               Capacitor Android project (after native setup)
+  ANDROID.md             Signing, build, install, and GitHub Release steps
 ```
 
 ## Testing

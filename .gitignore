@@ -1,5 +1,14 @@
 .pnpm-store/
 frontend/node_modules/
 frontend/dist/
+frontend/dist-android/
+frontend/android/.gradle/
+frontend/android/build/
+frontend/android/app/build/
+frontend/android/local.properties
+frontend/android/keystore.properties
+frontend/release/
+frontend/android-release.keystore
+frontend/keystore.properties
 __pycache__/
 **/__pycache__/

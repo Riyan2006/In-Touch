@@ -1,0 +1,8 @@
+{
+  "appId": "app.intouch.demo",
+  "appName": "In Touch",
+  "webDir": "dist-android",
+  "android": {
+    "backgroundColor": "#0B0810"
+  }
+}

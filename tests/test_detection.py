@@ -1,6 +1,6 @@
 import unittest
 
-from intouch.detection import calculate_baseline, detect_contact, detect_dataset, sustained_threshold_month, z_score
+from intouch.detection import FALLBACK_REFERENCE_LEVELS, calculate_baseline, compute_reference_levels, detect_contact, detect_dataset, sustained_threshold_month, z_score
 from intouch.generator import GeneratorConfig, generate_dataset
 
 
@@ -29,6 +29,17 @@ class DetectionTests(unittest.TestCase):
         flag = detect_contact(cold_start)["flag"]
         self.assertEqual("rise_cold_start", flag["type"])
         self.assertEqual(8, flag["month_fired"])
+
+    def test_personalized_reference_averages_established_contacts_and_has_empty_fallback(self):
+        dataset = {
+            "contacts": [
+                {"first_appearance_month": 1, "monthly_signals": [{"month": month, "meetups": 1.0, "calls": 2.0, "avg_call_duration_min": 10.0, "texts_per_week": 10.0} for month in range(1, 5)]},
+                {"first_appearance_month": 1, "monthly_signals": [{"month": month, "meetups": 3.0, "calls": 6.0, "avg_call_duration_min": 20.0, "texts_per_week": 30.0} for month in range(1, 5)]},
+                {"first_appearance_month": 6, "monthly_signals": []},
+            ]
+        }
+        self.assertEqual({"meetups": 2.0, "calls": 4.0, "texts_per_week": 20.0}, compute_reference_levels(dataset))
+        self.assertEqual(FALLBACK_REFERENCE_LEVELS, compute_reference_levels({"contacts": [dataset["contacts"][-1]]}))
 
     def test_default_seed_meets_all_six_expected_outcomes(self):
         dataset = generate_dataset()

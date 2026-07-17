@@ -7,7 +7,10 @@ from typing import Any, Iterable
 
 
 WEIGHTS = {"meetups": 0.4, "calls": 0.4, "texts_per_week": 0.2}
-REFERENCE_LEVELS = {"meetups": 2.0, "calls": 4.0, "texts_per_week": 20.0}
+# Used only when a dataset has no established contacts from which a personal
+# reference can be learned. Normal cold-start detection uses the user's own
+# established-relationship baselines via compute_reference_levels().
+FALLBACK_REFERENCE_LEVELS = {"meetups": 2.0, "calls": 4.0, "texts_per_week": 20.0}
 
 
 def calculate_baseline(rows: Iterable[dict[str, Any]], window_size: int = 4) -> dict[str, float | list[int]]:
@@ -19,6 +22,24 @@ def calculate_baseline(rows: Iterable[dict[str, Any]], window_size: int = 4) -> 
     return {
         "window_months": [window[0]["month"], window[-1]["month"]],
         **{f"{field}_baseline": round(fmean(row[field] for row in window), 3) for field in fields},
+    }
+
+
+def compute_reference_levels(dataset: dict[str, list[dict[str, Any]]]) -> dict[str, float]:
+    """Average first-four-month baselines across this user's established contacts."""
+    baselines = [
+        calculate_baseline(contact["monthly_signals"])
+        for contact in dataset["contacts"]
+        if contact["first_appearance_month"] == 1
+    ]
+    if not baselines:
+        # A first-time user may only have newly observed contacts. Keep the
+        # former product defaults as a last-resort reference in that case.
+        return FALLBACK_REFERENCE_LEVELS.copy()
+    return {
+        "meetups": fmean(float(baseline["meetups_baseline"]) for baseline in baselines),
+        "calls": fmean(float(baseline["calls_baseline"]) for baseline in baselines),
+        "texts_per_week": fmean(float(baseline["texts_per_week_baseline"]) for baseline in baselines),
     }
 
 
@@ -57,7 +78,7 @@ def _primary_signal(score: dict[str, Any], direction: str) -> str:
     return min(components, key=components.get) if direction == "below" else max(components, key=components.get)
 
 
-def _cold_start_result(contact: dict[str, Any]) -> dict[str, Any]:
+def _cold_start_result(contact: dict[str, Any], reference_levels: dict[str, float]) -> dict[str, Any]:
     rows = contact["monthly_signals"]
     first = contact["first_appearance_month"]
     watch_end = first + 2  # Three monthly observations approximate the 8-week end point.
@@ -66,7 +87,7 @@ def _cold_start_result(contact: dict[str, Any]) -> dict[str, Any]:
     previous = next((row for row in reversed(window) if row["month"] < watch_end), None)
     frequency = 0.0
     if latest:
-        frequency = sum(WEIGHTS[field] * latest[field] / REFERENCE_LEVELS[field] for field in WEIGHTS)
+        frequency = sum(WEIGHTS[field] * latest[field] / reference_levels[field] for field in WEIGHTS)
     climbing = bool(latest and previous and sum(latest[field] for field in WEIGHTS) > sum(previous[field] for field in WEIGHTS))
     fired = bool(latest and frequency >= 0.70 and climbing)
     return {
@@ -85,10 +106,12 @@ def _cold_start_result(contact: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def detect_contact(contact: dict[str, Any], baseline_window: int = 4) -> dict[str, Any]:
+def detect_contact(
+    contact: dict[str, Any], baseline_window: int = 4, reference_levels: dict[str, float] | None = None
+) -> dict[str, Any]:
     """Produce the blueprint detection-output schema for one contact."""
     if contact["first_appearance_month"] > 1:
-        return _cold_start_result(contact)
+        return _cold_start_result(contact, reference_levels or FALLBACK_REFERENCE_LEVELS)
 
     rows = contact["monthly_signals"]
     if len(rows) < baseline_window:
@@ -129,4 +152,5 @@ def detect_contact(contact: dict[str, Any], baseline_window: int = 4) -> dict[st
 
 
 def detect_dataset(dataset: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
-    return [detect_contact(contact) for contact in dataset["contacts"]]
+    reference_levels = compute_reference_levels(dataset)
+    return [detect_contact(contact, reference_levels=reference_levels) for contact in dataset["contacts"]]
