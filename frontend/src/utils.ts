@@ -19,7 +19,10 @@ export function baselineFor(contact: Contact, signal: SignalKey) {
 }
 export function deltaFor(contact: Contact, signal: SignalKey, month: number) {
   const value = rowFor(contact, month)[signalField[signal]]; const baseline = Math.max(Number(baselineFor(contact, signal)), .1);
-  return Math.max(-300, Math.min(300, Math.round((value - baseline) / baseline * 100)));
+  // Preserve each signal's real relative growth in the UI. The +300% cap is
+  // for LLM-facing insight input; applying it here made distinct cold-start
+  // signals appear identical on the three stat cards.
+  return Math.round((value - baseline) / baseline * 100);
 }
 export function chartValues(contact: Contact) {
   if (contact.detection.monthly_scores.length) {

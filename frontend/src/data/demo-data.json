@@ -185,7 +185,7 @@
           ]
         }
       },
-      "insight": "Meetups with Priya have been 94% less by month 9."
+      "insight": "You've met up with Priya 94 percent less over the last month, a shift that started well before your texts and calls began to quiet down."
     },
     {
       "contact_id": "c2",
@@ -556,7 +556,7 @@
           ]
         }
       },
-      "insight": "Meetups with Tanvi have been 82% less by month 4."
+      "insight": "You've seen Tanvi in person about eighty percent less over the last month, though your phone calls have remained the most consistent part of how you stay in touch."
     },
     {
       "contact_id": "c4",
@@ -927,7 +927,7 @@
           ]
         }
       },
-      "insight": "Texts with Kabir have been 197% more by month 10."
+      "insight": "Your texts with Kabir have nearly tripled over the last month, while your calls and meetups have stayed relatively steady."
     },
     {
       "contact_id": "c6",
@@ -1005,7 +1005,7 @@
           ]
         }
       },
-      "insight": "Texts with Ishaan have been 300% more by month 8."
+      "insight": "You and Ishaan have gone from almost no contact to texting and calling each other constantly over the last two months, even though you haven't started meeting up in person yet."
     }
   ]
 }

@@ -1,7 +1,8 @@
 """LLM-backed, guarded insight-sentence generation for fired detections."""
 
-# NOTE: This module calls the Gemini API (gemini-3.5-flash) at runtime for
-# cost reasons. The entire codebase, including this file, was built using
+# NOTE: This module calls the Gemini API at runtime for cost reasons. It uses
+# gemini-3.5-flash first, then lower-cost/available Flash models on temporary
+# capacity failures. The entire codebase, including this file, was built using
 # Codex with GPT-5.6 as the coding agent.
 
 from __future__ import annotations
@@ -9,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 from statistics import fmean
 from typing import Any
 
@@ -17,12 +19,21 @@ from .generator import generate_dataset
 
 
 MODEL_NAME = "gemini-3.5-flash"
+# Ordered by preferred product voice, then capacity/cost-oriented fallbacks.
+MODEL_FALLBACK_CHAIN = (
+    MODEL_NAME,
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite",
+)
 SYSTEM_INSTRUCTION = """You write single-sentence observations for an app called In Touch, which
 notices quiet shifts in a person's relationships — fading, or forming —
 before they consciously notice themselves.
 
 Rules, strictly enforced:
 - Output exactly ONE sentence. No preamble, no explanation, no quotation marks.
+- Output a complete grammatical sentence ending with terminal punctuation. Never
+  output a rule label, heading, or incomplete phrase.
 - State what changed and roughly when. Never instruct the reader to do
   anything ("you should call them", "reach out to X" — forbidden).
 - Never use scoring, grading, or ranking language ("your closeness score",
@@ -47,7 +58,7 @@ Examples of the exact target voice:
 
 Match this register exactly. Do not be more dramatic, more clinical, or
 more encouraging than these examples."""
-STRICT_REMINDER = "\n\nReturn one plain, validated sentence only: no advice, scoring terms, quotes, or second sentence."
+STRICT_REMINDER = "\n\nReturn one complete, grammatical sentence ending in a period only: no advice, scoring terms, quotes, rule labels, fragments, or second sentence."
 
 SIGNALS = ("meetups", "calls", "texts")
 ROW_FIELDS = {"meetups": "meetups", "calls": "calls", "texts": "texts_per_week"}
@@ -142,10 +153,10 @@ def validate_insight(sentence: str) -> bool:
     if any(term in lower for term in DENYLIST):
         return False
     terminals = list(re.finditer(r"[.!?]", stripped))
-    return not any(stripped[match.end():].strip() for match in terminals)
+    return len(terminals) == 1 and terminals[0].end() == len(stripped)
 
 
-def _call_gemini(insight_input: dict[str, Any], system_instruction: str) -> str:
+def _call_gemini(insight_input: dict[str, Any], system_instruction: str, model_name: str) -> str:
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY must be set to generate an insight.")
@@ -153,14 +164,20 @@ def _call_gemini(insight_input: dict[str, Any], system_instruction: str) -> str:
     from google.genai import types
 
     client = genai.Client(api_key=api_key)
+    config_options: dict[str, Any] = {
+        "system_instruction": system_instruction,
+        "temperature": 0.5,
+        "max_output_tokens": 100,
+    }
+    # Gemini 3 models reason at medium effort by default. For this short,
+    # tightly constrained writing task, reserve the output budget for the
+    # sentence itself rather than internal reasoning.
+    if model_name.startswith("gemini-3"):
+        config_options["thinking_config"] = types.ThinkingConfig(thinking_level="minimal")
     response = client.models.generate_content(
-        model=MODEL_NAME,
+        model=model_name,
         contents=json.dumps(insight_input),
-        config=types.GenerateContentConfig(
-            system_instruction=system_instruction,
-            temperature=0.5,
-            max_output_tokens=100,
-        ),
+        config=types.GenerateContentConfig(**config_options),
     )
     return (response.text or "").strip().strip('"')
 
@@ -173,17 +190,52 @@ def _fallback(insight_input: dict[str, Any]) -> str:
     return f"{signal.capitalize()} with {name} have been {abs(change)}% {direction} by month {insight_input['month_flag_fired']}."
 
 
+def _is_temporary_model_failure(error: Exception) -> bool:
+    """Whether another Gemini model is worth attempting after this error."""
+    message = str(error).lower()
+    return any(
+        marker in message
+        for marker in ("429", "500", "502", "503", "504", "unavailable", "high demand", "resource exhausted", "rate limit", "quota", "not found")
+    )
+
+
 def generate_insight(insight_input: dict[str, Any]) -> str:
-    """Call Gemini once, retry invalid output once, then use a safe template."""
-    for instruction in (SYSTEM_INSTRUCTION, SYSTEM_INSTRUCTION + STRICT_REMINDER):
-        try:
-            sentence = _call_gemini(insight_input, instruction)
-        # An absent SDK/key, quota issue, or transient Gemini failure must not
-        # break the app's deterministic pipeline.
-        except Exception:
+    """Try supported Flash models, retry invalid prose once, then use a safe template."""
+    for index, model_name in enumerate(MODEL_FALLBACK_CHAIN):
+        for instruction in (SYSTEM_INSTRUCTION, SYSTEM_INSTRUCTION + STRICT_REMINDER):
+            try:
+                sentence = _call_gemini(insight_input, instruction, model_name)
+            # An absent SDK/key or a non-retryable API failure cannot be fixed
+            # by changing models, so preserve the deterministic fallback.
+            except Exception as error:
+                has_next_model = index < len(MODEL_FALLBACK_CHAIN) - 1
+                if _is_temporary_model_failure(error) and has_next_model:
+                    next_model = MODEL_FALLBACK_CHAIN[index + 1]
+                    print(
+                        f"WARNING: Gemini model {model_name} failed for {insight_input['contact_name']}: "
+                        f"{error}; trying {next_model}",
+                        file=sys.stderr,
+                    )
+                    break
+                print(
+                    f"WARNING: Gemini insight fallback for {insight_input['contact_name']} ({model_name}): {error}",
+                    file=sys.stderr,
+                )
+                return _fallback(insight_input)
+            if validate_insight(sentence):
+                return sentence
+        else:
+            print(
+                f"WARNING: Gemini insight fallback for {insight_input['contact_name']} ({model_name}): "
+                "validation failed twice",
+                file=sys.stderr,
+            )
             return _fallback(insight_input)
-        if validate_insight(sentence):
-            return sentence
+    # The loop only reaches here when every model had a temporary failure.
+    print(
+        f"WARNING: Gemini insight fallback for {insight_input['contact_name']}: all configured models failed",
+        file=sys.stderr,
+    )
     return _fallback(insight_input)
 
 

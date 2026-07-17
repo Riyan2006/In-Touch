@@ -1,9 +1,10 @@
 import os
 import unittest
+from unittest.mock import patch
 
 from intouch.detection import detect_dataset
 from intouch.generator import generate_dataset
-from intouch.insights import build_insight_input, generate_insight, validate_insight
+from intouch.insights import MODEL_FALLBACK_CHAIN, build_insight_input, generate_insight, validate_insight
 
 
 class InsightTests(unittest.TestCase):
@@ -47,6 +48,24 @@ class InsightTests(unittest.TestCase):
         self.assertFalse(validate_insight("You should reach out to Priya."))
         self.assertFalse(validate_insight("Your closeness score with Priya changed."))
         self.assertFalse(validate_insight("Calls changed. Texts held steady."))
+        self.assertFalse(validate_insight("Rule"))
+        self.assertFalse(validate_insight("Your meetups with"))
+
+    def test_uses_next_model_after_temporary_capacity_failure(self):
+        payload = build_insight_input(self.contacts["c1"], self.results["c1"])
+        calls: list[str] = []
+
+        def call_with_first_model_unavailable(_payload, _instruction, model_name):
+            calls.append(model_name)
+            if model_name == MODEL_FALLBACK_CHAIN[0]:
+                raise RuntimeError("503 UNAVAILABLE: high demand")
+            return "Meetups with Priya have been quieter since month 5."
+
+        with patch("intouch.insights._call_gemini", side_effect=call_with_first_model_unavailable):
+            sentence = generate_insight(payload)
+
+        self.assertTrue(validate_insight(sentence))
+        self.assertEqual([MODEL_FALLBACK_CHAIN[0], MODEL_FALLBACK_CHAIN[1]], calls)
 
     @unittest.skipUnless(os.getenv("RUN_GEMINI_INTEGRATION") == "1" and os.getenv("GEMINI_API_KEY"), "set RUN_GEMINI_INTEGRATION=1 and GEMINI_API_KEY to call Gemini")
     def test_gemini_c1_output_passes_validation(self):
