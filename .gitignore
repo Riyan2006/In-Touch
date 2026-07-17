@@ -1,0 +1,5 @@
+.pnpm-store/
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+**/__pycache__/

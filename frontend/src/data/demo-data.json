@@ -1,0 +1,1011 @@
+{
+  "contacts": [
+    {
+      "contact_id": "c1",
+      "name": "Priya",
+      "archetype": "fading_lead",
+      "monthly_signals": [
+        {
+          "month": 1,
+          "meetups": 2.303,
+          "calls": 3.355,
+          "avg_call_duration_min": 23.677,
+          "texts_per_week": 23.087
+        },
+        {
+          "month": 2,
+          "meetups": 1.697,
+          "calls": 3.299,
+          "avg_call_duration_min": 16.801,
+          "texts_per_week": 23.545
+        },
+        {
+          "month": 3,
+          "meetups": 1.641,
+          "calls": 4.601,
+          "avg_call_duration_min": 23.698,
+          "texts_per_week": 16.845
+        },
+        {
+          "month": 4,
+          "meetups": 2.334,
+          "calls": 3.381,
+          "avg_call_duration_min": 23.604,
+          "texts_per_week": 23.73
+        },
+        {
+          "month": 5,
+          "meetups": 1.199,
+          "calls": 3.29,
+          "avg_call_duration_min": 23.619,
+          "texts_per_week": 23.577
+        },
+        {
+          "month": 6,
+          "meetups": 0.346,
+          "calls": 3.342,
+          "avg_call_duration_min": 16.767,
+          "texts_per_week": 16.722
+        },
+        {
+          "month": 7,
+          "meetups": 0.234,
+          "calls": 1.679,
+          "avg_call_duration_min": 11.244,
+          "texts_per_week": 23.609
+        },
+        {
+          "month": 8,
+          "meetups": 0.163,
+          "calls": 0.831,
+          "avg_call_duration_min": 10.638,
+          "texts_per_week": 23.685
+        },
+        {
+          "month": 9,
+          "meetups": 0.119,
+          "calls": 0.848,
+          "avg_call_duration_min": 6.693,
+          "texts_per_week": 13.649
+        },
+        {
+          "month": 10,
+          "meetups": 0.117,
+          "calls": 0.936,
+          "avg_call_duration_min": 9.384,
+          "texts_per_week": 11.727
+        },
+        {
+          "month": 11,
+          "meetups": 0.0,
+          "calls": 0.931,
+          "avg_call_duration_min": 8.364,
+          "texts_per_week": 9.229
+        },
+        {
+          "month": 12,
+          "meetups": 0.0,
+          "calls": 1.175,
+          "avg_call_duration_min": 6.781,
+          "texts_per_week": 8.186
+        }
+      ],
+      "detection": {
+        "contact_id": "c1",
+        "baseline": {
+          "window_months": [
+            1,
+            4
+          ],
+          "meetups_baseline": 1.994,
+          "calls_baseline": 3.659,
+          "avg_call_duration_min_baseline": 21.945,
+          "texts_per_week_baseline": 21.802
+        },
+        "monthly_scores": [
+          {
+            "month": 3,
+            "z_meetups": -0.299,
+            "z_calls": 0.638,
+            "z_texts": -0.463,
+            "combined_weighted_z": 0.043
+          },
+          {
+            "month": 4,
+            "z_meetups": 0.402,
+            "z_calls": -0.165,
+            "z_texts": 0.203,
+            "combined_weighted_z": 0.135
+          },
+          {
+            "month": 5,
+            "z_meetups": -0.664,
+            "z_calls": -0.168,
+            "z_texts": 0.136,
+            "combined_weighted_z": -0.306
+          },
+          {
+            "month": 6,
+            "z_meetups": -1.377,
+            "z_calls": -0.144,
+            "z_texts": -0.388,
+            "combined_weighted_z": -0.686
+          },
+          {
+            "month": 7,
+            "z_meetups": -1.471,
+            "z_calls": -0.902,
+            "z_texts": 0.138,
+            "combined_weighted_z": -0.922
+          },
+          {
+            "month": 8,
+            "z_meetups": -1.53,
+            "z_calls": -1.288,
+            "z_texts": 0.144,
+            "combined_weighted_z": -1.099
+          },
+          {
+            "month": 9,
+            "z_meetups": -1.567,
+            "z_calls": -1.28,
+            "z_texts": -0.623,
+            "combined_weighted_z": -1.264
+          },
+          {
+            "month": 10,
+            "z_meetups": -1.569,
+            "z_calls": -1.24,
+            "z_texts": -0.77,
+            "combined_weighted_z": -1.278
+          },
+          {
+            "month": 11,
+            "z_meetups": -1.667,
+            "z_calls": -1.243,
+            "z_texts": -0.961,
+            "combined_weighted_z": -1.356
+          },
+          {
+            "month": 12,
+            "z_meetups": -1.667,
+            "z_calls": -1.131,
+            "z_texts": -1.041,
+            "combined_weighted_z": -1.327
+          }
+        ],
+        "flag": {
+          "type": "decay",
+          "fired": true,
+          "month_fired": 9,
+          "trigger_signal": "meetups",
+          "window_used": [
+            8,
+            9
+          ]
+        }
+      },
+      "insight": "Meetups with Priya have been 94% less by month 9."
+    },
+    {
+      "contact_id": "c2",
+      "name": "Meher",
+      "archetype": "stable",
+      "monthly_signals": [
+        {
+          "month": 1,
+          "meetups": 2.342,
+          "calls": 3.324,
+          "avg_call_duration_min": 23.529,
+          "texts_per_week": 23.861
+        },
+        {
+          "month": 2,
+          "meetups": 1.628,
+          "calls": 4.707,
+          "avg_call_duration_min": 16.359,
+          "texts_per_week": 16.565
+        },
+        {
+          "month": 3,
+          "meetups": 1.605,
+          "calls": 4.653,
+          "avg_call_duration_min": 23.179,
+          "texts_per_week": 23.871
+        },
+        {
+          "month": 4,
+          "meetups": 1.636,
+          "calls": 4.631,
+          "avg_call_duration_min": 23.539,
+          "texts_per_week": 23.53
+        },
+        {
+          "month": 5,
+          "meetups": 1.668,
+          "calls": 3.214,
+          "avg_call_duration_min": 23.832,
+          "texts_per_week": 16.942
+        },
+        {
+          "month": 6,
+          "meetups": 2.395,
+          "calls": 3.303,
+          "avg_call_duration_min": 16.239,
+          "texts_per_week": 23.128
+        },
+        {
+          "month": 7,
+          "meetups": 1.645,
+          "calls": 3.226,
+          "avg_call_duration_min": 16.788,
+          "texts_per_week": 23.73
+        },
+        {
+          "month": 8,
+          "meetups": 1.669,
+          "calls": 4.73,
+          "avg_call_duration_min": 16.482,
+          "texts_per_week": 16.775
+        },
+        {
+          "month": 9,
+          "meetups": 1.641,
+          "calls": 3.356,
+          "avg_call_duration_min": 16.369,
+          "texts_per_week": 16.095
+        },
+        {
+          "month": 10,
+          "meetups": 2.307,
+          "calls": 3.266,
+          "avg_call_duration_min": 16.868,
+          "texts_per_week": 23.571
+        },
+        {
+          "month": 11,
+          "meetups": 1.622,
+          "calls": 4.638,
+          "avg_call_duration_min": 16.569,
+          "texts_per_week": 16.533
+        },
+        {
+          "month": 12,
+          "meetups": 2.367,
+          "calls": 4.62,
+          "avg_call_duration_min": 16.661,
+          "texts_per_week": 23.249
+        }
+      ],
+      "detection": {
+        "contact_id": "c2",
+        "baseline": {
+          "window_months": [
+            1,
+            4
+          ],
+          "meetups_baseline": 1.803,
+          "calls_baseline": 4.329,
+          "avg_call_duration_min_baseline": 21.651,
+          "texts_per_week_baseline": 21.957
+        },
+        "monthly_scores": [
+          {
+            "month": 3,
+            "z_meetups": -0.319,
+            "z_calls": 0.265,
+            "z_texts": 0.302,
+            "combined_weighted_z": 0.039
+          },
+          {
+            "month": 4,
+            "z_meetups": -0.199,
+            "z_calls": 0.159,
+            "z_texts": 0.163,
+            "combined_weighted_z": 0.016
+          },
+          {
+            "month": 5,
+            "z_meetups": -0.125,
+            "z_calls": -0.429,
+            "z_texts": -0.381,
+            "combined_weighted_z": -0.298
+          },
+          {
+            "month": 6,
+            "z_meetups": 0.548,
+            "z_calls": -0.395,
+            "z_texts": 0.089,
+            "combined_weighted_z": 0.079
+          },
+          {
+            "month": 7,
+            "z_meetups": -0.146,
+            "z_calls": -0.425,
+            "z_texts": 0.135,
+            "combined_weighted_z": -0.201
+          },
+          {
+            "month": 8,
+            "z_meetups": -0.124,
+            "z_calls": 0.154,
+            "z_texts": -0.393,
+            "combined_weighted_z": -0.066
+          },
+          {
+            "month": 9,
+            "z_meetups": -0.15,
+            "z_calls": -0.375,
+            "z_texts": -0.445,
+            "combined_weighted_z": -0.299
+          },
+          {
+            "month": 10,
+            "z_meetups": 0.466,
+            "z_calls": -0.409,
+            "z_texts": 0.123,
+            "combined_weighted_z": 0.047
+          },
+          {
+            "month": 11,
+            "z_meetups": -0.167,
+            "z_calls": 0.119,
+            "z_texts": -0.412,
+            "combined_weighted_z": -0.102
+          },
+          {
+            "month": 12,
+            "z_meetups": 0.522,
+            "z_calls": 0.112,
+            "z_texts": 0.098,
+            "combined_weighted_z": 0.273
+          }
+        ],
+        "flag": {
+          "type": "none",
+          "fired": false,
+          "month_fired": null,
+          "trigger_signal": null,
+          "window_used": null
+        }
+      },
+      "insight": null
+    },
+    {
+      "contact_id": "c3",
+      "name": "Tanvi",
+      "archetype": "already_faded",
+      "monthly_signals": [
+        {
+          "month": 1,
+          "meetups": 2.069,
+          "calls": 4.18,
+          "avg_call_duration_min": 17.684,
+          "texts_per_week": 19.366
+        },
+        {
+          "month": 2,
+          "meetups": 2.881,
+          "calls": 5.959,
+          "avg_call_duration_min": 26.319,
+          "texts_per_week": 27.8
+        },
+        {
+          "month": 3,
+          "meetups": 0.252,
+          "calls": 0.424,
+          "avg_call_duration_min": 4.004,
+          "texts_per_week": 2.432
+        },
+        {
+          "month": 4,
+          "meetups": 0.249,
+          "calls": 0.6,
+          "avg_call_duration_min": 5.93,
+          "texts_per_week": 2.505
+        },
+        {
+          "month": 5,
+          "meetups": 0.354,
+          "calls": 0.594,
+          "avg_call_duration_min": 4.104,
+          "texts_per_week": 3.578
+        },
+        {
+          "month": 6,
+          "meetups": 0.241,
+          "calls": 0.42,
+          "avg_call_duration_min": 5.919,
+          "texts_per_week": 2.532
+        },
+        {
+          "month": 7,
+          "meetups": 0.349,
+          "calls": 0.59,
+          "avg_call_duration_min": 4.104,
+          "texts_per_week": 3.59
+        },
+        {
+          "month": 8,
+          "meetups": 0.244,
+          "calls": 0.415,
+          "avg_call_duration_min": 5.825,
+          "texts_per_week": 2.437
+        },
+        {
+          "month": 9,
+          "meetups": 0.248,
+          "calls": 0.6,
+          "avg_call_duration_min": 4.197,
+          "texts_per_week": 2.41
+        },
+        {
+          "month": 10,
+          "meetups": 0.358,
+          "calls": 0.421,
+          "avg_call_duration_min": 5.926,
+          "texts_per_week": 3.598
+        },
+        {
+          "month": 11,
+          "meetups": 0.345,
+          "calls": 0.582,
+          "avg_call_duration_min": 5.985,
+          "texts_per_week": 2.533
+        },
+        {
+          "month": 12,
+          "meetups": 0.247,
+          "calls": 0.41,
+          "avg_call_duration_min": 5.801,
+          "texts_per_week": 3.49
+        }
+      ],
+      "detection": {
+        "contact_id": "c3",
+        "baseline": {
+          "window_months": [
+            1,
+            4
+          ],
+          "meetups_baseline": 1.363,
+          "calls_baseline": 2.791,
+          "avg_call_duration_min_baseline": 13.484,
+          "texts_per_week_baseline": 13.026
+        },
+        "monthly_scores": [
+          {
+            "month": 3,
+            "z_meetups": -1.497,
+            "z_calls": -1.527,
+            "z_texts": -1.495,
+            "combined_weighted_z": -1.509
+          },
+          {
+            "month": 4,
+            "z_meetups": -1.351,
+            "z_calls": -1.266,
+            "z_texts": -1.33,
+            "combined_weighted_z": -1.313
+          },
+          {
+            "month": 5,
+            "z_meetups": -0.878,
+            "z_calls": -0.929,
+            "z_texts": -0.861,
+            "combined_weighted_z": -0.895
+          },
+          {
+            "month": 6,
+            "z_meetups": -0.977,
+            "z_calls": -1.003,
+            "z_texts": -0.957,
+            "combined_weighted_z": -0.983
+          },
+          {
+            "month": 7,
+            "z_meetups": -0.883,
+            "z_calls": -0.931,
+            "z_texts": -0.86,
+            "combined_weighted_z": -0.897
+          },
+          {
+            "month": 8,
+            "z_meetups": -0.974,
+            "z_calls": -1.005,
+            "z_texts": -0.965,
+            "combined_weighted_z": -0.984
+          },
+          {
+            "month": 9,
+            "z_meetups": -0.97,
+            "z_calls": -0.926,
+            "z_texts": -0.968,
+            "combined_weighted_z": -0.952
+          },
+          {
+            "month": 10,
+            "z_meetups": -0.875,
+            "z_calls": -1.002,
+            "z_texts": -0.859,
+            "combined_weighted_z": -0.923
+          },
+          {
+            "month": 11,
+            "z_meetups": -0.886,
+            "z_calls": -0.934,
+            "z_texts": -0.956,
+            "combined_weighted_z": -0.919
+          },
+          {
+            "month": 12,
+            "z_meetups": -0.971,
+            "z_calls": -1.007,
+            "z_texts": -0.869,
+            "combined_weighted_z": -0.965
+          }
+        ],
+        "flag": {
+          "type": "decay",
+          "fired": true,
+          "month_fired": 4,
+          "trigger_signal": "meetups",
+          "window_used": [
+            3,
+            4
+          ]
+        }
+      },
+      "insight": "Meetups with Tanvi have been 82% less by month 4."
+    },
+    {
+      "contact_id": "c4",
+      "name": "Rohan",
+      "archetype": "drifting_early",
+      "monthly_signals": [
+        {
+          "month": 1,
+          "meetups": 1.609,
+          "calls": 4.618,
+          "avg_call_duration_min": 16.723,
+          "texts_per_week": 16.229
+        },
+        {
+          "month": 2,
+          "meetups": 2.326,
+          "calls": 4.71,
+          "avg_call_duration_min": 16.99,
+          "texts_per_week": 16.117
+        },
+        {
+          "month": 3,
+          "meetups": 2.355,
+          "calls": 4.717,
+          "avg_call_duration_min": 16.873,
+          "texts_per_week": 16.101
+        },
+        {
+          "month": 4,
+          "meetups": 2.386,
+          "calls": 4.642,
+          "avg_call_duration_min": 16.897,
+          "texts_per_week": 23.884
+        },
+        {
+          "month": 5,
+          "meetups": 1.638,
+          "calls": 3.214,
+          "avg_call_duration_min": 23.976,
+          "texts_per_week": 23.881
+        },
+        {
+          "month": 6,
+          "meetups": 1.626,
+          "calls": 3.214,
+          "avg_call_duration_min": 23.864,
+          "texts_per_week": 23.267
+        },
+        {
+          "month": 7,
+          "meetups": 2.311,
+          "calls": 4.772,
+          "avg_call_duration_min": 16.183,
+          "texts_per_week": 16.695
+        },
+        {
+          "month": 8,
+          "meetups": 2.323,
+          "calls": 3.361,
+          "avg_call_duration_min": 16.136,
+          "texts_per_week": 23.279
+        },
+        {
+          "month": 9,
+          "meetups": 2.34,
+          "calls": 4.707,
+          "avg_call_duration_min": 23.115,
+          "texts_per_week": 23.179
+        },
+        {
+          "month": 10,
+          "meetups": 2.094,
+          "calls": 3.065,
+          "avg_call_duration_min": 22.148,
+          "texts_per_week": 22.336
+        },
+        {
+          "month": 11,
+          "meetups": 1.314,
+          "calls": 2.77,
+          "avg_call_duration_min": 14.467,
+          "texts_per_week": 21.347
+        },
+        {
+          "month": 12,
+          "meetups": 1.657,
+          "calls": 2.624,
+          "avg_call_duration_min": 19.831,
+          "texts_per_week": 13.729
+        }
+      ],
+      "detection": {
+        "contact_id": "c4",
+        "baseline": {
+          "window_months": [
+            1,
+            4
+          ],
+          "meetups_baseline": 2.169,
+          "calls_baseline": 4.672,
+          "avg_call_duration_min_baseline": 16.871,
+          "texts_per_week_baseline": 18.083
+        },
+        "monthly_scores": [
+          {
+            "month": 3,
+            "z_meetups": 0.328,
+            "z_calls": 0.019,
+            "z_texts": -0.007,
+            "combined_weighted_z": 0.137
+          },
+          {
+            "month": 4,
+            "z_meetups": 0.23,
+            "z_calls": -0.014,
+            "z_texts": 0.798,
+            "combined_weighted_z": 0.246
+          },
+          {
+            "month": 5,
+            "z_meetups": -0.408,
+            "z_calls": -0.52,
+            "z_texts": 0.534,
+            "combined_weighted_z": -0.264
+          },
+          {
+            "month": 6,
+            "z_meetups": -0.417,
+            "z_calls": -0.52,
+            "z_texts": 0.478,
+            "combined_weighted_z": -0.279
+          },
+          {
+            "month": 7,
+            "z_meetups": 0.109,
+            "z_calls": 0.036,
+            "z_texts": -0.128,
+            "combined_weighted_z": 0.032
+          },
+          {
+            "month": 8,
+            "z_meetups": 0.118,
+            "z_calls": -0.468,
+            "z_texts": 0.479,
+            "combined_weighted_z": -0.044
+          },
+          {
+            "month": 9,
+            "z_meetups": 0.131,
+            "z_calls": 0.013,
+            "z_texts": 0.47,
+            "combined_weighted_z": 0.152
+          },
+          {
+            "month": 10,
+            "z_meetups": -0.058,
+            "z_calls": -0.573,
+            "z_texts": 0.392,
+            "combined_weighted_z": -0.174
+          },
+          {
+            "month": 11,
+            "z_meetups": -0.657,
+            "z_calls": -0.678,
+            "z_texts": 0.301,
+            "combined_weighted_z": -0.474
+          },
+          {
+            "month": 12,
+            "z_meetups": -0.393,
+            "z_calls": -0.731,
+            "z_texts": -0.401,
+            "combined_weighted_z": -0.53
+          }
+        ],
+        "flag": {
+          "type": "none",
+          "fired": false,
+          "month_fired": null,
+          "trigger_signal": null,
+          "window_used": null
+        }
+      },
+      "insight": null
+    },
+    {
+      "contact_id": "c5",
+      "name": "Kabir",
+      "archetype": "warming_up",
+      "monthly_signals": [
+        {
+          "month": 1,
+          "meetups": 0.583,
+          "calls": 0.83,
+          "avg_call_duration_min": 8.352,
+          "texts_per_week": 4.145
+        },
+        {
+          "month": 2,
+          "meetups": 0.592,
+          "calls": 1.181,
+          "avg_call_duration_min": 8.226,
+          "texts_per_week": 4.178
+        },
+        {
+          "month": 3,
+          "meetups": 0.411,
+          "calls": 1.173,
+          "avg_call_duration_min": 8.393,
+          "texts_per_week": 4.025
+        },
+        {
+          "month": 4,
+          "meetups": 0.579,
+          "calls": 0.824,
+          "avg_call_duration_min": 11.668,
+          "texts_per_week": 5.938
+        },
+        {
+          "month": 5,
+          "meetups": 0.581,
+          "calls": 0.849,
+          "avg_call_duration_min": 8.262,
+          "texts_per_week": 5.768
+        },
+        {
+          "month": 6,
+          "meetups": 0.409,
+          "calls": 0.815,
+          "avg_call_duration_min": 8.378,
+          "texts_per_week": 5.751
+        },
+        {
+          "month": 7,
+          "meetups": 0.793,
+          "calls": 1.105,
+          "avg_call_duration_min": 8.689,
+          "texts_per_week": 7.684
+        },
+        {
+          "month": 8,
+          "meetups": 0.673,
+          "calls": 1.35,
+          "avg_call_duration_min": 13.993,
+          "texts_per_week": 9.979
+        },
+        {
+          "month": 9,
+          "meetups": 1.181,
+          "calls": 2.35,
+          "avg_call_duration_min": 14.717,
+          "texts_per_week": 11.872
+        },
+        {
+          "month": 10,
+          "meetups": 0.977,
+          "calls": 1.909,
+          "avg_call_duration_min": 15.68,
+          "texts_per_week": 13.577
+        },
+        {
+          "month": 11,
+          "meetups": 1.114,
+          "calls": 2.224,
+          "avg_call_duration_min": 16.39,
+          "texts_per_week": 10.87
+        },
+        {
+          "month": 12,
+          "meetups": 1.73,
+          "calls": 2.469,
+          "avg_call_duration_min": 12.595,
+          "texts_per_week": 12.071
+        }
+      ],
+      "detection": {
+        "contact_id": "c5",
+        "baseline": {
+          "window_months": [
+            1,
+            4
+          ],
+          "meetups_baseline": 0.541,
+          "calls_baseline": 1.002,
+          "avg_call_duration_min_baseline": 9.16,
+          "texts_per_week_baseline": 4.572
+        },
+        "monthly_scores": [
+          {
+            "month": 3,
+            "z_meetups": -0.501,
+            "z_calls": 0.278,
+            "z_texts": -0.055,
+            "combined_weighted_z": -0.1
+          },
+          {
+            "month": 4,
+            "z_meetups": 0.159,
+            "z_calls": -0.373,
+            "z_texts": 0.738,
+            "combined_weighted_z": 0.062
+          },
+          {
+            "month": 5,
+            "z_meetups": 0.122,
+            "z_calls": -0.254,
+            "z_texts": 0.436,
+            "combined_weighted_z": 0.034
+          },
+          {
+            "month": 6,
+            "z_meetups": -0.407,
+            "z_calls": -0.311,
+            "z_texts": 0.43,
+            "combined_weighted_z": -0.201
+          },
+          {
+            "month": 7,
+            "z_meetups": 0.775,
+            "z_calls": 0.171,
+            "z_texts": 1.135,
+            "combined_weighted_z": 0.606
+          },
+          {
+            "month": 8,
+            "z_meetups": 0.406,
+            "z_calls": 0.579,
+            "z_texts": 1.971,
+            "combined_weighted_z": 0.788
+          },
+          {
+            "month": 9,
+            "z_meetups": 1.97,
+            "z_calls": 2.242,
+            "z_texts": 2.662,
+            "combined_weighted_z": 2.217
+          },
+          {
+            "month": 10,
+            "z_meetups": 1.342,
+            "z_calls": 1.509,
+            "z_texts": 3.283,
+            "combined_weighted_z": 1.797
+          },
+          {
+            "month": 11,
+            "z_meetups": 1.764,
+            "z_calls": 2.033,
+            "z_texts": 2.296,
+            "combined_weighted_z": 1.978
+          },
+          {
+            "month": 12,
+            "z_meetups": 3.661,
+            "z_calls": 2.44,
+            "z_texts": 2.734,
+            "combined_weighted_z": 2.987
+          }
+        ],
+        "flag": {
+          "type": "rise_existing",
+          "fired": true,
+          "month_fired": 10,
+          "trigger_signal": "texts",
+          "window_used": [
+            9,
+            10
+          ]
+        }
+      },
+      "insight": "Texts with Kabir have been 197% more by month 10."
+    },
+    {
+      "contact_id": "c6",
+      "name": "Ishaan",
+      "archetype": "cold_start_new",
+      "monthly_signals": [
+        {
+          "month": 6,
+          "meetups": 0.355,
+          "calls": 0.594,
+          "avg_call_duration_min": 5.948,
+          "texts_per_week": 2.437
+        },
+        {
+          "month": 7,
+          "meetups": 1.317,
+          "calls": 1.788,
+          "avg_call_duration_min": 14.162,
+          "texts_per_week": 9.229
+        },
+        {
+          "month": 8,
+          "meetups": 1.612,
+          "calls": 3.101,
+          "avg_call_duration_min": 13.468,
+          "texts_per_week": 16.029
+        },
+        {
+          "month": 9,
+          "meetups": 2.303,
+          "calls": 3.205,
+          "avg_call_duration_min": 13.904,
+          "texts_per_week": 16.538
+        },
+        {
+          "month": 10,
+          "meetups": 1.662,
+          "calls": 3.335,
+          "avg_call_duration_min": 21.041,
+          "texts_per_week": 23.832
+        },
+        {
+          "month": 11,
+          "meetups": 1.776,
+          "calls": 3.292,
+          "avg_call_duration_min": 21.015,
+          "texts_per_week": 23.781
+        },
+        {
+          "month": 12,
+          "meetups": 2.494,
+          "calls": 4.64,
+          "avg_call_duration_min": 15.163,
+          "texts_per_week": 16.331
+        }
+      ],
+      "detection": {
+        "contact_id": "c6",
+        "baseline": {
+          "window_months": [],
+          "meetups_baseline": null,
+          "calls_baseline": null,
+          "avg_call_duration_baseline": null,
+          "texts_per_week_baseline": null
+        },
+        "monthly_scores": [],
+        "flag": {
+          "type": "rise_cold_start",
+          "fired": true,
+          "month_fired": 8,
+          "trigger_signal": "combined_weighted_frequency",
+          "window_used": [
+            6,
+            8
+          ]
+        }
+      },
+      "insight": "Texts with Ishaan have been 300% more by month 8."
+    }
+  ]
+}
