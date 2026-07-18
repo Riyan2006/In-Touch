@@ -46,5 +46,5 @@ export function contactFromCalendar(name: string, email: string, months: Calenda
   const insight = !flag.fired || !flag.month_fired ? null : flag.type === "decay"
     ? `Calendar time with ${name} has become quieter since ${months[flag.month_fired - 1].label}.`
     : `Calendar time with ${name} has become more regular since ${months[flag.month_fired - 1].label}.`;
-  return { contact_id: `calendar-${Date.now()}`, name, archetype: "calendar_import", monthly_signals: detection.monthly_signals, detection: { baseline: detection.baseline, monthly_scores: detection.monthly_scores, flag }, insight, data_source: "calendar", source_email: email.trim() || undefined, month_labels: months.map((entry) => entry.label) };
+  return { contact_id: `calendar-${Date.now()}`, name, archetype: "calendar_import", monthly_signals: detection.monthly_signals, detection: { baseline: detection.baseline, monthly_scores: detection.monthly_scores, flag }, insight, data_source: "calendar", source_email: email.trim() || undefined, source_data: { calendar: months.map((entry) => ({ label: entry.label, meetup_count: entry.meetup_count })) }, month_labels: months.map((entry) => entry.label) };
 }

@@ -1,12 +1,12 @@
 # In Touch
 
-**Live demo:** https://in-touch-beta.vercel.app/
+**Live demo:** [in-touch-beta.vercel.app](https://in-touch-beta.vercel.app/)
 
-In Touch is an ambient layer for the relationships already in your life. It notices when contact is quietly fading or when a connection is beginning to form before that change is consciously obvious: fewer meetups followed by fewer calls, or a new person becoming part of the week. It is never a score, never a ranking, and never advice about what to do. It simply makes a plain, human observation when a pattern has held long enough to be worth noticing.
+In Touch is an ambient relationship-pattern observer. It notices a friendship getting quieter or a connection becoming more regular before that shift is consciously obvious. It is never a score, never a ranking, and never advice: it makes a plain observation only when a pattern has held long enough to be worth noticing.
 
-## Run the app
+## Run the web demo
 
-The frontend runs from the committed static demo data, so no API key is needed to view the app.
+The web app uses committed static data, so no backend or API key is needed to view it.
 
 ```powershell
 git clone https://github.com/Riyan2006/In-Touch.git
@@ -15,15 +15,27 @@ pnpm install
 pnpm run dev
 ```
 
-Open the local URL printed by Vite. To create a production build:
+Open the local URL printed by Vite. For a production build:
 
 ```powershell
 pnpm run build
 ```
 
+## Platform support
+
+| Capability | Web demo | Android APK |
+| --- | --- | --- |
+| Built-in demo | Six seeded synthetic contacts | One fictional Sample Contact |
+| Manual tracked people | Yes, session-only | Yes, persisted on device |
+| WhatsApp `.txt` export | Yes, client-side | Yes, client-side and persisted on device after confirmation |
+| Calendar meetup scan | Visible but disabled with an Android-only note | Yes, on demand with `READ_CALENDAR` permission |
+| Combining WhatsApp texts and calendar meetups for one person | Not available from the web UI | Yes, when the two imports have at least four overlapping calendar months |
+| Theme toggle | Outer page corner; resets to dark on a fresh page load | First-launch picker and Settings control; choice persists on device |
+| Gemini/API key needed to use the UI | No | No |
+
 ## Python backend
 
-The backend generates the synthetic relationship data, detects sustained changes, and prepares the insight inputs.
+The Python package generates the seeded six-contact dataset, detects sustained changes, and optionally prepares insight wording for the browser payload.
 
 ```powershell
 cd In-Touch
@@ -34,73 +46,97 @@ python -m intouch.validate
 python -m unittest discover -s tests
 ```
 
-On macOS/Linux, activate the virtual environment with `source .venv/bin/activate` instead.
+On macOS/Linux, activate with `source .venv/bin/activate` instead. `python -m intouch.validate` prints the six-contact detector summary.
 
-`python -m intouch.validate` prints the six-contact detector summary. `python -m unittest discover -s tests` runs the full Python test suite.
+## Detection model
+
+- Established contacts receive a baseline from their first four available months. Meetups, calls, and texts are normalized against their own history and combined at weights `0.4`, `0.4`, and `0.2`.
+- A decay or an existing-contact rise fires only after the combined z-score stays past `-1.0` or `+1.0` for two consecutive months.
+- A cold-start contact has no personal history, so it uses a separate eight-week frequency-and-growth rule. Its reference is personalized: In Touch averages the first-four-month baselines of this user’s established contacts once per dataset. The old `2 meetups / 4 calls / 20 texts per week` levels are retained only as an edge-case fallback when a dataset has no established contacts at all.
+
+## Real-data imports and privacy
+
+### WhatsApp export — web and Android
+
+Tracked People can import a WhatsApp `.txt` export. The parser supports the common Android and iOS timestamp formats, treats continuation lines as part of the preceding message rather than a new message, excludes system/placeholder entries, buckets the most recent twelve calendar months, and requires at least four months of history.
+
+Parsing happens entirely on the device. Message body text is used only for the immediate local system-message exclusion check, then discarded; it is never retained, logged, stored, or transmitted. The resulting contact uses **texts-only** detection: texts are normalized against the first four months, while calls and meetups are visibly unavailable rather than represented by fake zeroes.
+
+### Calendar meetups — Android only
+
+The Android app can scan the last twelve months of the phone’s synced calendar after the user explicitly starts **Find calendar meetups**. `READ_CALENDAR` is declared in the APK and requested only at that point. For each event, matching checks invited attendees in this order: supplied email address first, then normalized attendee name, followed by an optional, user-enabled title-name match. Event titles, notes, locations, guest lists, identifiers, and raw event details are discarded after the immediate comparison; only monthly meetup counts are returned and persisted.
+
+Calendar imports use **meetups-only** detection, with calls and texts marked unavailable. They measure scheduled shared time, not confirmed attendance. On Android, a WhatsApp import and a calendar import can be attached to the same tracked person; when they overlap for at least four calendar months, the app aligns them and detects a combined texts-plus-meetups pattern. Calls remain unavailable in that combined view.
+
+## Theme and interaction design
+
+Dark jewel tones are the default. The web page has a small sun/moon utility toggle outside the phone mockup; its light-theme choice applies to the current page and resets to dark after a fresh load. On Android, the first launch asks for a sun or moon choice, persists it with Capacitor Preferences, and exposes the same toggle later in Settings.
+
+The desktop-only margin text retains its radial “torchlight” reveal in both themes: it reveals pale italic text in dark mode and ink-colored text in light mode. Warm amber/rose continues to denote fading; cool teal/violet continues to denote forming.
 
 ## Android APK (Android only)
 
-The live web page includes a **Try the web demo** control and an explicitly marked **Android only — APK download** control. The Android package is a Capacitor wrapper around the same React interface, but it intentionally contains only one fictional **Sample Contact** rather than the browser demo's six contacts. It runs from bundled assets and needs no backend, Gemini key, account, or device permissions.
+The website has an explicitly marked **Android only — APK download** control. The installed Capacitor app is a real full-screen app surface, not a webpage wrapped around a phone mockup. It intentionally starts with just one fictional **Sample Contact**, not the browser’s six demo contacts.
 
-To create and sign the APK, install JDK 21 and Android Studio/SDK, then follow [frontend/ANDROID.md](frontend/ANDROID.md). Publish the resulting `InTouch-android.apk` as the GitHub Release asset named by that document; the web download control targets the repository's stable `latest/download` release URL.
+To build and sign it, install JDK 21 and Android Studio/SDK, then follow [frontend/ANDROID.md](frontend/ANDROID.md). The APK is distributed directly from a GitHub Release, not the Play Store. Android will therefore show its normal unknown-source/security prompt during installation; this is expected for a sideloaded APK, and the installer must be allowed to continue.
 
 ## Demo data and optional Gemini export
 
-[`frontend/src/data/demo-data.json`](frontend/src/data/demo-data.json) is already included. It is pre-generated, seeded synthetic data for six illustrative contacts, including their monthly signals, detection output, and insight text. Judges can run and view the app without a Gemini key, any API account, or a backend server.
+[`frontend/src/data/demo-data.json`](frontend/src/data/demo-data.json) is the committed seeded synthetic payload for the browser’s six illustrative contacts. It includes monthly signals, detector output, and insight text, so judges can run the web app without Gemini, an API account, or a backend server.
 
-Set `GEMINI_API_KEY` only if you want to regenerate the insight wording and overwrite the static demo payload:
+Set `GEMINI_API_KEY` only to regenerate those insight sentences and overwrite that static file:
 
 ```powershell
 $env:GEMINI_API_KEY = "your_key_here"
 python -m intouch.export_demo_data
 ```
 
-The export uses Gemini for this narrow wording step only. It tries `gemini-3.5-flash` first, then configured lower-cost Flash fallbacks when a temporary capacity or quota failure occurs. If Gemini is unavailable, the exporter logs a clear warning and produces a deterministic fallback sentence rather than failing silently. The committed JSON lets the deployed app run without invoking Gemini.
-
-## How it works
-
-- A seeded Python generator creates twelve months of synthetic signals for six archetypes: fading lead, stable, already faded, early drift, warming up, and a cold-start connection.
-- The deterministic detector establishes a four-month per-contact baseline, normalizes meetups, calls, and texts against their own histories, then combines them with weights of 0.4, 0.4, and 0.2.
-- A decay or existing-contact rise requires a weighted z-score to stay beyond its threshold for two consecutive months. A cold start uses a separate eight-week reference-frequency and still-climbing rule because it has no personal baseline yet.
-- A guarded Gemini call turns only fired flags into a single observation sentence. Validation rejects advice, scoring language, overly long output, and multi-sentence output before a deterministic fallback is used.
+Gemini is used only for this wording export step. The code tries `gemini-3.5-flash`, then `gemini-3.1-flash-lite`, `gemini-2.5-flash`, and `gemini-2.5-flash-lite` after a temporary capacity, quota, or availability failure. Each model gets one stricter retry only when its generated prose fails validation; a non-temporary API/key/SDK failure, two invalid responses from a model, or exhaustion of the temporary-failure chain produces a logged deterministic template fallback. The committed JSON means neither deployed UI invokes Gemini at runtime.
 
 ## Codex and GPT-5.6
 
-The entire codebase was built in one continuous Codex session running GPT-5.6 (Terra/Luna) as the coding agent. That session implemented the seeded data generator and its six archetypes, the explainable detection engine and tests, the guarded insight-input and validation layer, the static React/Vite/Framer Motion experience, and later accessibility, reporting, settings, and visual-polish work.
+The whole project was built in one continuous Codex session using GPT-5.6 (Terra/Luna) as the coding agent. That work covers the seeded generator, deterministic detection engine and tests, guarded Gemini integration, React/Vite/Framer Motion interface, Android Capacitor packaging, WhatsApp and Calendar data paths, persistence, accessibility, themes, and visual polish.
 
-The one exception is the generated wording itself: at export/build time, the insight feature calls the Gemini API for cost reasons, starting with `gemini-3.5-flash`. Everything around that call—including prompt design, model fallback behavior, validation, logging, fallback templates, export wiring, and all frontend code—was written in that continuous Codex/GPT-5.6 session.
+The only model exception is generated insight wording during optional export: it calls Gemini for cost reasons. The Gemini integration itself—prompt, model fallback chain, validation, warning logs, template fallback, and export wiring—was also authored in that continuous Codex/GPT-5.6 session.
 
 ## Project structure
 
 ```text
 intouch/
-  generator.py          Seeded, configurable synthetic contact data
-  detection.py          Baselines, z-scores, sustained flags, cold-start rule
-  insights.py           Narrow Gemini wording layer and guardrails
-  export_demo_data.py   Consolidates pipeline output for the frontend
-  validate.py           Prints the six-contact validation summary
+  generator.py             Seeded, configurable synthetic contacts
+  detection.py             Baselines, z-scores, sustained flags, personalized cold-start reference
+  insights.py              Guarded Gemini wording and deterministic fallback
+  export_demo_data.py      Exports the browser demo payload
+  validate.py              Prints the six-contact validation summary
 tests/
-  test_detection.py     Deterministic detection and threshold tests
-  test_insights.py      Insight-input, guardrail, fallback, and opt-in API tests
+  test_detection.py        Python detection and personalized-reference tests
+  test_insights.py         Insight input, guardrail, fallback, and opt-in API tests
 frontend/
-  src/                  React + TypeScript + Framer Motion phone demo
-  src/data/demo-data.json  Committed static payload consumed by the UI
-  src/data/sample-data.ts  Android-only one-contact illustrative payload
-  android/               Capacitor Android project (after native setup)
-  ANDROID.md             Signing, build, install, and GitHub Release steps
+  src/                     React, TypeScript, Framer Motion, imports, and client-side detectors
+  src/data/demo-data.json  Six-contact browser payload
+  src/data/sample-data.ts  One-contact Android payload
+  android/                 Capacitor app, Calendar plugin, signing configuration
+  ANDROID.md               Android build, install, privacy, and release guide
 ```
 
 ## Testing
 
-Run the two Python test modules together:
+Python tests:
 
 ```powershell
 python -m unittest discover -s tests
 ```
 
-`tests/test_detection.py` covers baselines, per-signal normalization, sustained decay/rise thresholds, the cold-start rule, and the expected six-contact outcomes. `tests/test_insights.py` covers insight-input assembly, validation guardrails, and model fallback behavior.
+Frontend tests for WhatsApp parsing, text-only detection, Calendar-only detection, and combined-source alignment:
 
-One integration test makes a real Gemini call only when both environment variables are set; it is skipped by default:
+```powershell
+cd frontend
+pnpm test
+pnpm run build
+pnpm run build:android
+```
+
+The opt-in Gemini integration test is skipped by default and makes a real API call only when both variables are set:
 
 ```powershell
 $env:RUN_GEMINI_INTEGRATION = "1"
@@ -108,9 +144,10 @@ $env:GEMINI_API_KEY = "your_key_here"
 python -m unittest tests.test_insights
 ```
 
-## MVP limitations
+## Intentional MVP limits
 
-- All relationship data is synthetic; there is no Calendar, Contacts, WhatsApp, or messaging integration yet.
-- The demo intentionally observes contact frequency only, never message content.
-- People added from the UI are local-only session state: they appear in Tracked People and Reports but are not persisted or added to the home contact rail.
-- There is no account system, multi-user collaboration, or backend API server in this MVP.
+- The browser’s built-in contacts and Android’s Sample Contact are illustrative synthetic data.
+- Imported WhatsApp and Calendar counts are local, session-only on the web. Android persists tracked people, source-derived monthly counts, selected contact, and theme with Capacitor Preferences; it does not sync them to a server or account.
+- There is no Contacts integration, backend API, multi-user system, or cloud synchronization.
+- Call-log integration is deliberately not built. Android’s `READ_CALL_LOG` access is restricted in practice to default dialer/SMS-role apps and is not appropriate for this sideloaded app, which deliberately does not take over phone calling or messaging.
+- Calendar events represent scheduled time rather than confirmed attendance, and chat exports represent message frequency rather than message meaning.

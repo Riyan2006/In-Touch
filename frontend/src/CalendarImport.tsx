@@ -3,10 +3,10 @@ import type { Contact } from "./types";
 import { contactFromCalendar, scanCalendarMeetups, type CalendarMonth } from "./calendar";
 import "./whatsapp-import.css";
 
-type Props = { onClose: () => void; onImported: (contact: Contact) => void };
+type Props = { initialName?: string; initialEmail?: string; onClose: () => void; onImported: (contact: Contact) => void };
 
-export default function CalendarImport({ onClose, onImported }: Props) {
-  const [name, setName] = useState(""); const [email, setEmail] = useState(""); const [includeTitles, setIncludeTitles] = useState(false); const [months, setMonths] = useState<CalendarMonth[] | null>(null); const [matches, setMatches] = useState(0); const [error, setError] = useState<string | null>(null); const [loading, setLoading] = useState(false);
+export default function CalendarImport({ initialName, initialEmail, onClose, onImported }: Props) {
+  const [name, setName] = useState(initialName ?? ""); const [email, setEmail] = useState(initialEmail ?? ""); const [includeTitles, setIncludeTitles] = useState(false); const [months, setMonths] = useState<CalendarMonth[] | null>(null); const [matches, setMatches] = useState(0); const [error, setError] = useState<string | null>(null); const [loading, setLoading] = useState(false);
   const scan = async () => {
     if (!name.trim()) return;
     setError(null); setLoading(true);

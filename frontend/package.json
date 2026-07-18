@@ -15,6 +15,7 @@
   "dependencies": {
     "@capacitor/android": "^8.4.2",
     "@capacitor/core": "^8.4.2",
+    "@capacitor/preferences": "8.0.0",
     "@vitejs/plugin-react": "latest",
     "framer-motion": "latest",
     "react": "latest",

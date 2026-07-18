@@ -1,4 +1,4 @@
 019f662f-16f1-72c2-b31e-9ff5785b292c
 
-Verified original Jul 15 In Touch /feedback session identifier for the submission form.
-Directly verified from this project's Codex local session-history record, which names this workspace and stores this exact session ID. The installed `codex resume` executable was blocked by Windows, so this note does not claim a resume command was used.
+Verified original Jul 15 In Touch /feedback identifier for the one continuous Codex task that built this project.
+The ID was read directly from this project's local Codex session-history record, not reconstructed or guessed. The installed `codex resume` executable is blocked by Windows in this environment, so this note deliberately does not claim that a resume command was used.

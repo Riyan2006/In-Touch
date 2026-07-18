@@ -5,6 +5,7 @@ export type SignalKey = "texts" | "calls" | "meetups";
 export const signalField: Record<SignalKey, keyof Signal> = { texts: "texts_per_week", calls: "calls", meetups: "meetups" };
 export function isTextsOnly(contact: Contact) { return contact.data_source === "whatsapp"; }
 export function isCalendarOnly(contact: Contact) { return contact.data_source === "calendar"; }
+export function isCombinedSources(contact: Contact) { return contact.data_source === "combined"; }
 
 export function toneFor(contact: Contact): Tone { return contact.detection.flag.type === "decay" ? "warm" : contact.detection.flag.type === "none" ? "neutral" : "cool"; }
 export function statusFor(contact: Contact) {

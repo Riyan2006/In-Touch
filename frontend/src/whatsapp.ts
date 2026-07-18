@@ -124,6 +124,7 @@ export function contactFromWhatsApp(name: string, months: ChatMonth[]): Contact 
     detection: { baseline: detection.baseline, monthly_scores: detection.monthly_scores, flag: detection.flag },
     insight: fallbackInsight(name, detection.flag, latest.texts_per_week, detection.baseline, latest.label),
     data_source: "whatsapp",
+    source_data: { whatsapp: months.map((entry) => ({ label: entry.label, texts_per_week: entry.texts_per_week })) },
     month_labels: months.map((entry) => entry.label),
   };
 }

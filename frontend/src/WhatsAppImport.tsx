@@ -9,10 +9,10 @@ const errorMessage: Record<ParseFailure, string> = {
   under_four_months: "Need at least 4 months of chat history to establish a baseline.",
 };
 
-type Props = { onClose: () => void; onImported: (contact: Contact) => void };
+type Props = { initialName?: string; onClose: () => void; onImported: (contact: Contact) => void };
 
-export default function WhatsAppImport({ onClose, onImported }: Props) {
-  const [name, setName] = useState("");
+export default function WhatsAppImport({ initialName, onClose, onImported }: Props) {
+  const [name, setName] = useState(initialName ?? "");
   const [months, setMonths] = useState<ChatMonth[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
