@@ -6,7 +6,7 @@ In Touch is an ambient relationship-pattern observer. It notices a friendship ge
 
 ## Run the web demo
 
-The web app uses committed static data, so no backend or API key is needed to view it.
+The web app uses committed static data, so no backend or API key is needed to view it. It requires Node.js 22.12 or newer and pnpm 10.28.0; pnpm is selected automatically from the committed `packageManager` setting.
 
 ```powershell
 git clone https://github.com/Riyan2006/In-Touch.git
@@ -95,7 +95,7 @@ The export code tries `gemini-3.5-flash`, then `gemini-3.1-flash-lite`, `gemini-
 
 ### Runtime Gemini reports
 
-The web deployment and Android app can also ask Gemini to phrase a fired report when that report is opened. The key remains private: set `GEMINI_API_KEY` in the **Vercel project’s Environment Variables** for Production (and Preview if wanted), then redeploy. It is read only by `frontend/api/insight.ts`; it is never committed, shipped in the web bundle, or placed in the APK. The runtime request contains only a sanitized aggregate summary—contact display name, flag type, signal name, baseline/latest value, and available-signal labels—never message text, calendar event details, files, or identifiers. If the endpoint is unavailable, the UI keeps working with its local deterministic wording.
+The web deployment and Android app can also ask Gemini to phrase a fired report when that report is opened. The key remains private: set `GEMINI_API_KEY` in the **Vercel project’s Environment Variables** for Production (and Preview if wanted), then redeploy. It is read only by `frontend/api/insight.js`; it is never committed, shipped in the web bundle, or placed in the APK. The runtime request contains only a sanitized aggregate summary—contact display name, flag type, signal name, baseline/latest value, and available-signal labels—never message text, calendar event details, files, or identifiers. If the endpoint is unavailable, the UI keeps working with its local deterministic wording.
 
 ## Codex and GPT-5.6
 
