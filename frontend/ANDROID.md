@@ -2,7 +2,7 @@
 
 The Android build uses Capacitor to package the full-screen In Touch app—not the browser marketing shell or phone mockup. It intentionally starts with one fictional **Sample Contact**; the browser’s six-contact synthetic payload is excluded from the Android build.
 
-The installed app works from bundled assets and does not need a backend, Gemini key, account, or network connection for its built-in demo. User-added local sources are described below.
+The installed app works from bundled assets and does not need a backend, Gemini key, or account for its built-in demo. It works offline with local fallback wording; when a fired report is opened while online, it can request a fresh one-sentence observation through the deployed Vercel Gemini endpoint. User-added local sources are described below.
 
 ## What Android adds
 

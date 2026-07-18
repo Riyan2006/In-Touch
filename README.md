@@ -91,7 +91,11 @@ $env:GEMINI_API_KEY = "your_key_here"
 python -m intouch.export_demo_data
 ```
 
-Gemini is used only for this wording export step. The code tries `gemini-3.5-flash`, then `gemini-3.1-flash-lite`, `gemini-2.5-flash`, and `gemini-2.5-flash-lite` after a temporary capacity, quota, or availability failure. Each model gets one stricter retry only when its generated prose fails validation; a non-temporary API/key/SDK failure, two invalid responses from a model, or exhaustion of the temporary-failure chain produces a logged deterministic template fallback. The committed JSON means neither deployed UI invokes Gemini at runtime.
+The export code tries `gemini-3.5-flash`, then `gemini-3.1-flash-lite`, `gemini-2.5-flash`, and `gemini-2.5-flash-lite` after a temporary capacity, quota, or availability failure. Each model gets one stricter retry only when its generated prose fails validation; a non-temporary API/key/SDK failure, two invalid responses from a model, or exhaustion of the temporary-failure chain produces a logged deterministic template fallback.
+
+### Runtime Gemini reports
+
+The web deployment and Android app can also ask Gemini to phrase a fired report when that report is opened. The key remains private: set `GEMINI_API_KEY` in the **Vercel project’s Environment Variables** for Production (and Preview if wanted), then redeploy. It is read only by `frontend/api/insight.ts`; it is never committed, shipped in the web bundle, or placed in the APK. The runtime request contains only a sanitized aggregate summary—contact display name, flag type, signal name, baseline/latest value, and available-signal labels—never message text, calendar event details, files, or identifiers. If the endpoint is unavailable, the UI keeps working with its local deterministic wording.
 
 ## Codex and GPT-5.6
 
